@@ -1,0 +1,9 @@
+{
+    "name": "HTTP Status Code Query",
+    "description": "插件描述",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html"
+    }
+}

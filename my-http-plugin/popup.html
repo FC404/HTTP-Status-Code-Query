@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP 状态码查询器</title>
+    <style>
+        /* 基础样式 */
+        .http-status-container {
+            width: 100%;
+            /* 自动宽度 */
+            max-width: 320px;
+            /* 设置最大宽度，防止容器过大 */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            /* 固定宽度 */
+            margin: 0 auto;
+            padding: 16px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            /* 确保padding不会增加宽度 */
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 16px 0;
+            color: #333;
+        }
+
+        /* 搜索区域 */
+        .search-container {
+            display: flex;
+            margin-bottom: 16px;
+            width: 100%;
+            /* 确保宽度一致 */
+        }
+
+        .search-input {
+            flex: 1;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+            /* 确保padding不会增加宽度 */
+        }
+
+        .search-input:focus {
+            border-color: #000000;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-button {
+            margin-left: 8px;
+            height: 36px;
+            padding: 0 12px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            /* 防止文字换行 */
+        }
+
+        .search-button:hover {
+            background-color: #46464c;
+        }
+
+        .search-icon {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+
+        /* 结果区域 */
+        .result-container {
+            width: 100%;
+            /* 确保宽度一致 */
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            background-color: #f9fafb;
+            animation: fadeIn 0.3s ease-out;
+            box-sizing: border-box;
+            /* 确保padding不会增加宽度 */
+            display: none;
+            /* 默认隐藏 */
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .status-code {
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .status-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-description {
+            margin: 0;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        /* 状态码类别颜色 */
+        .info-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .success-badge {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .redirect-badge {
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .client-error-badge {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .server-error-badge {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .unknown-badge {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="http-status-container">
+        <h1 class="title">HTTP 状态码查询器</h1>
+        <div class="search-container">
+            <input id="statusCodeInput" placeholder="输入状态码" class="search-input" />
+            <button id="searchButton" class="search-button">
+                <span class="search-icon">
+                    <svg t="1744462981174" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="2438" width="30" height="30">
+                        <path
+                            d="M784.6912 139.1104H239.3088a89.7024 89.7024 0 0 0-89.6 89.6v576.8192a89.7024 89.7024 0 0 0 89.6 89.6h545.3824a89.7024 89.7024 0 0 0 89.6-89.6V228.7104a89.7024 89.7024 0 0 0-89.6-89.6z m-545.3824 56.32h545.3824a33.3312 33.3312 0 0 1 33.28 33.28v78.7456H206.0288V228.7104a33.3312 33.3312 0 0 1 33.28-33.28z m545.3824 643.3792H239.3088a33.3312 33.3312 0 0 1-33.28-33.28V363.776h611.9424v441.7536a33.3312 33.3312 0 0 1-33.28 33.28z"
+                            p-id="2439" fill="#ffffff"></path>
+                        <path
+                            d="M389.7344 508.6208a25.6 25.6 0 0 0-36.096-2.56l-96.4608 83.8144a25.6 25.6 0 0 0 0 38.656l96.4608 83.7632a25.2416 25.2416 0 0 0 16.7936 6.2976 25.6 25.6 0 0 0 16.7936-44.9024L312.9856 609.28l74.24-64.4608a25.6 25.6 0 0 0 2.5088-36.1984zM574.0544 422.0416a25.6 25.6 0 0 0-32.9216 15.36l-114.5856 310.528a25.6 25.6 0 1 0 48.0256 17.7152l114.6368-310.6816a25.6 25.6 0 0 0-15.1552-32.9216zM764.5696 589.8752L668.16 506.0608a25.6 25.6 0 1 0-33.5872 38.656L708.7616 609.28l-74.1888 64.512a25.6 25.6 0 1 0 33.5872 38.6048l96.4096-83.7632a25.6 25.6 0 0 0 0-38.656z"
+                            p-id="2440" fill="#ffffff"></path>
+                    </svg>
+                </span>
+                查询
+            </button>
+        </div>
+        <div id="resultContainer" class="result-container">
+            <div class="status-header">
+                <span id="statusCode" class="status-code"></span>
+                <span id="statusBadge" class="status-badge"></span>
+            </div>
+            <p id="statusDescription" class="status-description"></p>
+        </div>
+    </div>
+
+    <script src="./src/app.js"></script>
+</body>
+
+</html>

@@ -1,2 +1,4 @@
 # HTTP-Status-Code-Query
-# HTTP-Status-Code-Query
+浏览器插件用于查询http返回的状态码 解决情况 
+把文件夹获取之后 打开浏览器的开发者设置可以
+把当前下载的文件夹用于压缩使用 就可以使用了
